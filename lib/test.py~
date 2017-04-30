@@ -1,0 +1,285 @@
+from models import *
+from random import randint
+
+
+FFBSKT_URL = 'ag5kZXZ-Z3JhcGhncm9vcHIaCxIEQmFzZSIQZmZic2t0QGdtYWlsLmNvbQw'
+BASKETBALL_GROUP_URL = 'ag5kZXZ-Z3JhcGhncm9vcHIwCxIFR3JvdXAiEGZmYnNrdEBnbWFpbC5jb20MCxIFR3JvdXAiCkJhc2tldGJhbGwM'
+
+def start(self):
+    self.Clear(Answer())
+    #key = ndb.Key(Group, 'ffbskt@gmail.com', Group, 'General parametrs')
+    group = GroupStat(name='General parametrs', st_name=['name', 'content', 'avatar','rate'], st_opt=['name','0','photo','hist'], st_ifbase=[True, True, True, True], role_propertys_add=[{'name':'admin', 'change':['content', 'avatar', 'rate', '@name'], 'visible': []}, {'name':'user' , 'change':['@content', '@avatar'], 'visible': ['name', 'content', 'avatar','rate']}])
+    self.create_group(group)	
+    self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='General parametrs', group_creator='ffbskt@gmail.com', role='admin'))
+    self.add_user(User(mail='@unknown', name='unknown')) # write timer for unknown  
+
+    group = GroupStat(name='Basketball', st_name=['name', 'avatar', 'rate', 'visit'], st_opt=['name','photo','hist', 'hist'], st_ifbase=[True, True, True, False], role_propertys_add=[{'name':'admin', 'change':['visit', '@invite'], 'visible': ['name','avatar', 'rate']}, {'name':'user' , 'change':[], 'visible': ['name', 'avatar','rate', 'visit']}])
+    self.create_group(group)	
+    group = GroupStat(name='Math', st_name=['name', 'avatar', 'rate','lesson_plus', 'hom_work', 'hom_work'], st_opt=['name','photo','hist', '0','nero','ranking'], st_ifbase=[True, True, True, False, False, False], role_propertys_add=[{'name':'admin', 'change':['lesson_plus', 'hom_work'], 'visible': ['name', 'avatar']}, {'name':'user' , 'change':[], 'visible': ['name', 'avatar','rate', 'lesson_plus', 'hom_work']}])
+    self.create_group(group)	
+    group = GroupStat(name='Gim', st_name=['name', 'avatar', 'visit', 'all_tickets'], st_opt=['name','photo','0','0'], st_ifbase=[True, True, False, False], role_propertys_add=[{'name':'admin', 'change':['visit'], 'visible': ['name', 'avatar','all_tickets']}, {'name':'user' , 'change':[], 'visible': ['name', 'visit', 'all_tickets']}])
+    self.create_group(group)
+    group = GroupStat(name='Tmp', st_name=['name', 'avatar'], st_opt=['name','photo'], st_ifbase=[True, True], role_propertys_add=[{'name':'admin', 'change':[], 'visible': []}, {'name':'user' , 'change':[], 'visible': ['name']}])
+    self.create_group(group)
+    self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='Basketball', group_creator='ffbskt@gmail.com', role='admin'))
+
+    group = GroupStat(name='Verify', st_name=['name', 'avatar', 'rate', 'name_verify',  'name_verify'], st_opt=['name','photo','hist', 'nero','ranking'], st_ifbase=[True, True, True, False, False], role_propertys_add=[{'name':'admin', 'change':[], 'visible': ['name', 'avatar']}, {'name':'user' , 'change':['name_verify'], 'visible': ['name', 'avatar','rate']}])
+    self.create_group(group)
+    self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='Verify', group_creator='ffbskt@gmail.com', role='admin'))
+    
+    #self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='Basketball', group_creator='ffbskt@gmail.com', role='admin'))
+	#group = GroupStat(name='Tornament', st_name=['name', 'avatar', 'content', 'rate'], st_opt=['0','0','photo','points'], st_ifbase=[True, True, True, True], role_propertys_add=[{'name':'referi', 'change':['points'], 'visible': ['name', 'avatar']}, {'name':'team' , 'change':[], 'visible': ['name', 'visit', 'all_tickets']}])
+	    #self.create_group(group)			
+	#st_name - add all teams score, and points 
+
+#------------------------------------------------------TESTS__________________________________________------
+def T_f(self, param={'mail':'dognomadc@gmail.com'}, mescls=User, f='add_user'):
+    print '$$ T_f ', f
+    u = mescls(**param)
+    T={}		
+    getattr(self, f)(u)
+    
+
+def T_rating_test(self):
+    param={'name':'RT La', 'st_name':['name', 'avatar', '1km', '400m', 'jump'], 'st_opt':['0', 'photo', 'ranking','ranking','ranking'], 'st_place':[1,1,2], 'st_w':[2.0,3.0,4.0], 'st_ifbase':[True,True,False,False,False], 'role_propertys_add':[{'name':'admin', 'change':['1km', '400m', 'jump','@invite'] , 'visible': ['name']}, {'name':'@open', 'change':[],'visible': ['name','1km', '400m', 'jump']}]}	
+    T_f(self, param=param, mescls=GroupStat, f='create_group')
+    print "TEST______________"	
+    T_f(self,  param={'child_object':'ffbskt@gmail.com', 'group_name':'RT La', 'group_creator':'ffbskt@gmail.com', 'role':'admin'}, mescls=PutObjectTo, f='put_object_to_group')
+    T_f(self, param={'child_object':'dognomadc@gmail.com', 'group_name':'RT La', 'group_creator':'ffbskt@gmail.com', 'role':'user'}, mescls=PutObjectTo, f='put_object_to_group')
+    #Need group url in st_block and obj url	
+    T_f(self, param={'url':'ahFkZXZ-dW5pdmVyc2l0eWdpbXIaCxIEQmFzZSIQZmZic2t0QGdtYWlsLmNvbQw', 'stat_block':[{'group_url':'ahFkZXZ-dW5pdmVyc2l0eWdpbXIrCxIFR3JvdXAiEGZmYnNrdEBnbWFpbC5jb20MCxIFR3JvdXAiBVJUIExhDA', 'return_ch':[0], 'st_name':['1km'], 'st_def':['456'], 'st_opt':['ranking']},  ]}, mescls=User, f='edit_user')
+    
+    T_f(self, param={'group_url':'ahFkZXZ-dW5pdmVyc2l0eWdpbXIrCxIFR3JvdXAiEGZmYnNrdEBnbWFpbC5jb20MCxIFR3JvdXAiBVJUIExhDA'}, mescls=Show, f='compute_rate')
+    group_url = ndb.Key(Group, 'ffbskt@gmail.com', Group, 'RT La').urlsafe()			
+    for user in ['a@','b@','c@','d@']:
+	T_f(self, param={'child_object':user, 'group_name':'RT La', 'group_creator':'ffbskt@gmail.com', 'role':'admin'}, mescls=PutObjectTo, f='put_object_to_group')
+    #param={'url':ndb.Key(Base, user).urlsafe(), 'stat_block':[{'group_url':group_url, 'return_ch':[0,1,2], 'st_name':['1km', '400m', 'jump'], 'st_def':[str(randint(240, 340)/60.0), str(randint(45, 80)), str(randint(140, 240))], 'st_opt':['ranking', 'ranking', 'ranking']},  ]}
+    for res in range(3):
+	add_stat(['a@','b@','c@','d@', 'ffbskt@gmail.com'], 'RT La', param, self, )
+	T_f(self, param={'group_url':ndb.Key(Group, 'ffbskt@gmail.com', Group, 'RT La').urlsafe()}, mescls=Show, f='compute_rate')
+	
+
+def add_stat(users, group, param, self, athors=[], group_creator='ffbskt@gmail.com'):
+    urls = []	
+    group_url = ndb.Key(Group, group_creator, Group, group).urlsafe()	
+    if athors == []:
+	for user in users:
+	    urls.append(ndb.Key(Base, user).urlsafe())
+    else:
+	for user, auth in zip(users, athors):
+	    urls.append(ndb.Key(Group, auth, Group, user).urlsafe())
+     		 	
+    for url in urls:	
+	print "-__________", urls, group, group_url, ndb.Key(ObjectToGroup, group_url, ObjectToGroup, url).get()
+	#user_url = ndb.Key(ObjectToGroup, group_url, ObjectToGroup, url).urlsafe()
+	user_param={'url':url, 'stat_block':[{'group_url':group_url, 'return_ch':[], 'st_name':[], 'st_def':[], 'st_opt':[]}]}
+	j=0
+	for i, par in enumerate(param['st_opt']):
+	    if par == 'ranking':
+		user_param['stat_block'][0]['st_def'].append(str(randint(0, 40)))
+		user_param['stat_block'][0]['return_ch'].append(j)
+		user_param['stat_block'][0]['st_name'].append(param['st_name'][i])
+		user_param['stat_block'][0]['st_opt'].append('ranking')
+		j+=1 
+	T_f(self, param=user_param, mescls=User, f='edit_user')
+	print "ADD STAT", user_param
+ 	
+
+
+#-----------------------Group Structure Test---------------------------------------------------------
+def put_to(child, gr_name, ch_aut='ffbskt@gmail.com', gr_aut='ffbskt@gmail.com', role='group'):
+    param={'child_object':child, 'child_gr_author':ch_aut, 'group_name':gr_name, 'group_creator':gr_aut, 'role':role} 
+    return {'param':param, 'mescls':PutObjectTo, 'f':'put_object_to_group'}	  
+    #T_f(self, , param=param, mescls=PutObjectTo, f='put_object_to_group')	
+    
+def T_group_structure(self, ):
+    T_f(self, param={'name':'Sport', 'st_name':['name', 'popularity', 'activity'], 'st_opt':['name', 'ranking','ranking'], 'st_place':[2,2], 'st_w':[1.0,2.0], 'st_ifbase':[True,False,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name','popularity', 'activity']}]}, mescls=GroupStat, f='create_group')
+    # Add weight like for level	
+    T_f(self,  param={'name':'Bskt', 'st_name':['name', 'level'], 'st_opt':['0', 'ranking'], 'st_place':[2], 'st_w':[1.0], 'st_ifbase':[True,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name','level']}]}, mescls=GroupStat, f='create_group')
+    T_f(self,  param={'name':'Normatives', 'st_name':['name', '1km', '400m', 'jump'], 'st_opt':['name', 'ranking', 'ranking', 'ranking'], 'st_place':[1,1,2], 'st_w':[2.0,3.0,4.0], 'st_ifbase':[True,False,False,False], 'role_propertys_add':[{'name':'participant', 'change':[],'visible': ['name','1km', '400m', 'jump']}, {'name':'@open', 'change':[],'visible': ['name','1km', '400m', 'jump']}]}, mescls=GroupStat, f='create_group')	
+    T_f(self,  param={'name':'Referi', 'st_name':['name', 'games', 'mark', 'mark'], 'st_opt':['name', 'ranking', 'ranking', 'nero'], 'st_place':[2,2], 'st_w':[1.0, 2.0], 'st_ifbase':[True,False,False,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name', 'games', 'mark']}]}, mescls=GroupStat, f='create_group')	
+    T_f(self,  param={'name':'BsktNormatives', 'st_name':['name', 'freethrow', '3points', '8flors'], 'st_opt':['name', 'ranking','ranking','ranking'], 'st_place':[2,2,1], 'st_w':[1.0,1.3,1.4], 'st_ifbase':[True,False,False,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name', 'freethrow', '3points', '8flors']}]}, mescls=GroupStat, f='create_group')
+    T_f(self,  param={'name':'Tornament', 'st_name':['name', 'games', 'vin'], 'st_opt':['name', '0', 'ranking'], 'st_place':[2], 'st_w':[1.0], 'st_ifbase':[True,False,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name', 'games', 'vin']}]}, mescls=GroupStat, f='create_group')
+
+    param={'name':'Team2', 'st_name':['name', 'games', 'points', 'role', 'cr'], 'st_opt':['name', '0', 'ranking', '0','0'], 'st_place':[2], 'st_w':[1.0], 'st_ifbase':[True,False,False,False,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name', 'games', 'points', 'role']}, {'name':'player', 'change':[],'visible': ['name', 'games', 'points', 'role']}, {'name':'crowd','change':[],'visible': ['name', 'cr', 'points']}]}
+    for team in ['Team1', 'Team2', 'Team3']:
+	param['name'] = team	
+        T_f(self, param=param, mescls=GroupStat, f='create_group')
+    #T_f(self,  param=param, mescls=GroupStat, f='create_group')
+    #T_f(self,  param=param, mescls=GroupStat, f='create_group')
+
+    #put groups
+    T_f(self,  **put_to(child='Normatives', gr_name='Sport'))
+    T_f(self,  **put_to(child='Referi', gr_name='Normatives'))	
+    T_f(self,  **put_to(child='Bskt', gr_name='Sport'))
+    T_f(self,  **put_to(child='Referi', gr_name='Bskt'))
+    T_f(self, **put_to(child='BsktNormatives', gr_name='Bskt'))
+    T_f(self, **put_to(child='Tornament', gr_name='Bskt'))
+    T_f(self, **put_to(child='Team1', gr_name='Tornament'))
+    T_f(self,  **put_to(child='Team2', gr_name='Tornament'))
+    T_f(self,  **put_to(child='Team3', gr_name='Tornament'))		
+    
+    #put users
+    T_f(self,  param={'child_object':'dognomadc@gmail.com', 'group_name':'General parametrs', 'group_creator':'ffbskt@gmail.com', 'role':'user'}, mescls=PutObjectTo, f='put_object_to_group')	
+    T_f(self,  param={'child_object':'dognomadc@gmail.com', 'group_name':'Tornament', 'group_creator':'ffbskt@gmail.com', 'role':'__creator'}, mescls=PutObjectTo, f='put_object_to_group')			
+    for user in ['cr1@','cr2@','cr3@','cr4@','cr5@','bpl1@','bpl2@','bpl3@','bpl4@','bpl5@',
+		'bpl6@','bpl7@','bpl8@','bpl9@','bpl10@','la1@','la2@','la3@']:
+	T_f(self,  param={'child_object':user, 'group_name':'General parametrs', 'group_creator':'ffbskt@gmail.com', 'role':'user'}, mescls=PutObjectTo, f='put_object_to_group')
+    #for user in ['bpl1@','bpl2@','bpl3@']:
+	#T_f(self,  param={'child_object':user, 'group_name':'Team3', 'group_creator':'ffbskt@gmail.com', 'role':'player'}, mescls=PutObjectTo, f='put_object_to_group')
+    for user in ['bpl4@','bpl5@','bpl6@']:
+	T_f(self,  param={'child_object':user, 'group_name':'Team1', 'group_creator':'ffbskt@gmail.com', 'role':'player'}, mescls=PutObjectTo, f='put_object_to_group')
+    for user in ['cr1@','cr2@','cr3@','ffbskt@gmail.com']:
+	T_f(self,  param={'child_object':user, 'group_name':'Team1', 'group_creator':'ffbskt@gmail.com', 'role':'crowd'}, mescls=PutObjectTo, f='put_object_to_group')		
+    for user in ['bpl7@','bpl8@','bpl9@']:
+	T_f(self,  param={'child_object':user, 'group_name':'Team2', 'group_creator':'ffbskt@gmail.com', 'role':'player'}, mescls=PutObjectTo, f='put_object_to_group')			
+    for user in ['bpl1@','la1@','la2@','la3@']:
+	T_f(self,  param={'child_object':user, 'group_name':'Normatives', 'group_creator':'ffbskt@gmail.com', 'role':'participant'}, mescls=PutObjectTo, f='put_object_to_group')
+    #T_f(self,  param={'child_object':'dognomadc@gmail.com', 'group_name':'RT La', 'group_creator':'ffbskt@gmail.com', 'role':'user'}, mescls=PutObjectTo, f='put_object_to_group')	
+    add_stat(['bpl7@','bpl8@','bpl9@'], 'Team2', param, self)
+
+
+#___________________________________________________________________________________________________	
+
+def T_high_perfomance(self):
+    #print '111', 'qwertyuiopasdfghjklzxcvbnm'
+	 
+    #T_f(self,  param={'user_url':FFBSKT_URL, 'is_add': True, 'group':BASKETBALL_GROUP_URL, 'role':'__id'}, mescls=EditRole, f='edit_role')	
+    for i in 'qwertyuiopas':
+	for j in 'qwertyuiopasdfghjklz':
+	    #print i+j+k+'@'
+	    pass
+	    #T_f(self, param={'child_object':i+j+'@', 'group_name':'General parametrs', 'group_creator':'ffbskt@gmail.com', 'role':'user'}, mescls=PutObjectTo, f='put_object_to_group')
+	    #T_f(self,  param={'child_object':i+j+'@', 'group_name':'Basketball', 'group_creator':'ffbskt@gmail.com', 'role':'user'}, mescls=PutObjectTo, f='put_object_to_group')
+	    url = ndb.Key(Base, i+j+'@').urlsafe()	
+	    #T_f(self,  param={'child_object':url, 'attribute_name': 'name', 'value':i+j}, mescls=EditEntityAttr, f='edit_entity_value')	
+    cid = 34		
+    for i in 'qwertyuiopas':
+	for j in 'qwertyuiopasdfghjklz':	
+	    T_f(self,  param={'card_id':str(cid), 'child_object':i+j+'@', 'group_url':BASKETBALL_GROUP_URL, 'stat_pls':'visit'}, mescls=CardId, f='use_card')
+	    cid += 1	
+
+
+def T_show(self, name1, name2, p=None):
+    if not p:
+        p=name2
+    #print '--T Show', repr(name1)	
+    #print len(ndb.Key(Base, name1).get().a_f)
+    print 'group = ', ndb.Key(Group, name2).get()
+    print ndb.Key(ObjectToGroup, name1, ObjectToGroup, p).get()
+    print '\no b j ', (ObjectToGroup.query(ObjectToGroup.name==name1, ObjectToGroup.group_name==name2).fetch())
+#(ObjectToGroup.query(ObjectToGroup.name==name1).filter(ObjectToGroup.group_name==name2).fetch())
+def T_remove_all(self, message):
+    s = 1000 
+    entr = Base.query().fetch()
+    list_of_keys = ndb.put_multi(entr)	
+    #for i in entr:
+    #    memcache.delete(i.mail, s)
+    ndb.delete_multi(list_of_keys)
+    entr = ObjectToGroup.query().fetch()
+    list_of_keys = ndb.put_multi(entr)	
+    #for i in entr:
+    #    memcache.delete(i.key, s)
+    ndb.delete_multi(list_of_keys)
+    entr = Group.query().fetch()
+    list_of_keys = ndb.put_multi(entr)	
+    ndb.delete_multi(list_of_keys) 
+    entr = NeroStat.query().fetch()
+    list_of_keys = ndb.put_multi(entr)	
+    ndb.delete_multi(list_of_keys) 	  
+    #for i in entr:
+    #    memcache.delete(i.key, s)
+    
+
+def T_in_out_group(self, message):
+    gp=GroupStat(name='Tparent', st_name=['lesson_remain', 'lesson_value'], role_propertys_add=[{'name':'admin' , 'change':['lesson_value','@invite', 'lesson_remain'] , 'visible': ['name']},{'name':'user' , 'change':['@name','@content'] , 'visible': ['lesson_remain', 'lesson_value']}])
+    self.create_group(gp)
+    ga=GroupStat(name='TchildA', parent_group='Tparent', st_name=['lesson_remain', 'lesson_value'], role_propertys_add=[{'name':'admin' , 'change':['lesson_value','@invite', 'lesson_remain'] , 'visible': ['name']},{'name':'user' , 'change':['@name','@content'] , 'visible': ['lesson_remain', 'lesson_value']}])
+    self.create_group(ga)
+    gb=GroupStat(name='TchildB', parent_group='Tparent', st_name=['lesson_remain', 'lesson_value'], role_propertys_add=[{'name':'admin' , 'change':['@invite'] , 'visible': ['name']},{'name':'user' , 'change':['@name','@content', 'lesson_value', 'lesson_remain'] , 'visible': ['lesson_remain', 'lesson_value']}])
+    self.create_group(gb)
+    gc=GroupStat(name='TchildC', parent_group='Tparent', st_name=[], role_propertys_add=[{'name':'ara' , 'change':['content'] , 'visible': ['name']}])
+    self.create_group(gc)
+    
+    test_ask_put(self, gname='Tparent', observer='test_a_u@')
+    #print
+    
+    test_ask_put(self, gname='TchildA',observer='test_a_u@', invite=True)
+    #time.sleep(3)
+    test_ask_put(self, gname='TchildB',observer='test_a_u@') 	
+    #time.sleep(3)
+    test_ask_put(self, gname='TchildC',observer='test_a_u@')
+    test_ask_put(self, gname='TchildA',observer='test_a_u@', invite=True)
+
+
+def card_test_prepare(self, message):
+    ga=GroupStat(name='A', st_name=['u_f', 'a_f', 'lesson_in'], role_propertys_add=[{'name':'admin' , 'change':['a_f','@invite'] , 'visible': ['u_f', 'a_f']}])
+    self.create_group(ga)
+    self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='A', role='admin'))
+    self.put_object_to_group(PutObjectTo(child_object='dognomadc@gmail.com', group_name='A', role='user'))
+    print "++create group + 2 users nomad & ff"
+    #gupd = GroupStat(name='A', st_name=['card'], st_opt=['+@u_f'], role_propertys_add=[{'name':'admin', 'change':['card'], 'visible': []}])
+    #self.update_group(gupd)
+    self.use_card(CardId(card_id='123', child_object='ffbskt@gmail.com', stat_pls='u_f'))
+    self.use_card(CardId(card_id='123', stat_pls='u_f'))
+
+def T_fill_attr(self):
+    self.start(Answer())
+    ga=GroupStat(name='A', st_name=['name', 'name', 'lesson_in', 'lesson_in', 'jump'], st_opt=['0','like','nero',"ranking","ranking"], st_ifbase=[True, True, False,False,False], st_place=[0], role_propertys_add=[{'name':'admin' , 'change':['name', 'lesson_in', 'jump', '@invite'], 'visible': []}, {'name':'user' , 'change':['lesson_in','jump'] , 'visible': []}])
+    self.create_group(ga)
+    self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='A', group_creator='ffbskt@gmail.com', role='admin'))	
+    #self.put_object_to_group(PutObjectTo(child_object='dognomadc@gmail.com', group_name='A', group_creator='ffbskt@gmail.com', role='user'))
+    #self.put_object_to_group(PutObjectTo(child_object='1@', group_name='A', role='user', kind='user'))
+    print "TEST CREATE GROUP COPY TMP"
+    gb=CopyGroup(old_name='A', old_author='ffbskt@gmail.com', new_name='b')
+    self.copy_template(gb)
+    print "TEST PUT USER AND GROUP"	
+    #self.put_object_to_group(PutObjectTo(child_object='b', group_name='A', kind='group'))
+    #self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='b', role='admin', kind='user'))	
+    #-self.create_group(gb)	
+    #-self.put_object_to_group(PutObjectTo(child_object='ffbskt@gmail.com', group_name='B', role='admin', kind='user'))
+    gp=GroupStat(name='U', st_name=['hw', 'lesson_in2', 'name'], st_opt=['photo',"nero",'0'], st_ifbase=[False,False,True], role_propertys_add=[{'name':'admin' , 'change':[], 'visible': []}])
+    self.create_group(gp)	
+    self.put_object_to_group(PutObjectTo(child_object='U', child_gr_author='ffbskt@gmail.com', group_name='A', group_creator='ffbskt@gmail.com'))	
+    T_show_user(self, Answer(), u='ahFkZXZ-dW5pdmVyc2l0eWdpbXIaCxIEQmFzZSIQZmZic2t0QGdtYWlsLmNvbQw', s='ffbskt@gmail.com')
+
+
+def T_Nero(self):
+    print '--T Edit Nero stat'
+    u1 = User(mail='dognomadc@gmail.com', return_ch=[0,], st_def=['23',], st_name=['lesson_in',], st_opt=['nero',])
+    self.edit_user(u1)
+    u1.mail = '1@'
+    self.edit_user(u1)
+    entity = ndb.Key(Base, '1@').get()
+    self.fill_attr({'st_name':['lesson_in',], 'value':['203',], 'opt':['nero',]}, entity, upgrade=True, group_name=1, auth_mail='dognomadc@gmail.com')
+    entity.put()
+
+#param={'name':'Bskt', 'st_name':['name', 'level'], 'st_opt':['0', 'ranking'], 'st_place':[2], 'st_w':[1.0], 'st_ifbase':[True,False], 'role_propertys_add':[{'name':'@open', 'change':[],'visible': ['name','level']}]}, mescls=GroupStat, f='create_group')
+
+def T_Normativ(self):
+    #self.put_object_to_group(PutObjectTo(child_object='garrettbadalov@gmail.com', group_name='Basketball', group_creator='ffbskt@gmail.com', role='referi'))
+    #self.put_object_to_group(PutObjectTo(child_object='garrettbadalov@gmail.com', group_name='General parametrs', group_creator='ffbskt@gmail.com', role='user'))	
+    #self.put_object_to_group(PutObjectTo(child_object='dognomadc@gmail.com', group_name='Basketball', group_creator='ffbskt@gmail.com', role='user'))
+    param_add_stat={'name':'Basketball', 'st_name':['normativ'], 'st_opt':['ranking'], 'st_place':[1], 'st_w':[1.0], 'st_ifbase':[False], 'role_propertys_add':[{'name':'referi', 'change':['normativ'], 'visible':[]},{'name':'admin', 'change':['normativ'], 'visible':[]},{'name':'user', 'change':[], 'visible':['normativ']} ]}	
+    #T_f(self, param=param_add_stat, mescls=GroupStat, f='create_group')	
+    #T_f(self, param={'creator_mail':'ffbskt@gmail.com','name':'Basketball'}, mescls=GroupStat, f='update_group')
+    T_f(self, param={'group_url':BASKETBALL_GROUP_URL}, mescls=Show, f='compute_top')	
+    	
+
+
+def tl(self):
+    line = 'alinakhodakova97@gmail.com, 22557695, itimlatypov@gmail.com, 19650399, vm42297@gmail.com, 19149119, yarotskayatatiana98@gmail.com, 16943455, king16061999@gmail.com, 16843263, turovetskiy.m@gmail.com, 15840495, mathew.isaenko@gmail.com, 15238975, tokur@yandex.ru, 14938148, gatinamasha@gmail.com, 14336612, me.scribe.birdy@gmail.com, 11930623, gazanfarligf@gmail.com, 11028383, ekaterinakarandaeva2@gmail.com, 10827839, Irisha20K@gmail.com, 7719716, andruhanub@gmail.com, 7018047, gigantishko@gmail.com, 7018047, dj.tiger1999@gmail.com, 7017983, anikitin128@gmail.com, 5113183, smirnovmisa00@gmail.com, 4411519, safeevs@gmail.com, 4411455, novotorkin1@gmail.com, 3709727, maxon2177@gmail.com, 3208415, gekapavl1997@gmail.com, 3208319, yudintsevegor@gmail.com, 1804687, dragonborndovakhin@gmail.com, 701807, hitman924@googlemail.com, 401215, kholodnik@gmail.com, 401151'
+    print line.split(', ')	
+    arr = line.split(', ')
+    ml = ''
+    for i, d in enumerate(arr):
+	print '@', i, d, i%2	
+	if not i%2:		
+            self.put_object_to_group(PutObjectTo(child_object=d, group_name='Basketball', group_creator='ffbskt@gmail.com', role='user'))
+	    ml = d
+ 	else:
+	    print '--', ml
+	    ent = ndb.Key(Base, ml).get()
+	    ent.card_id = d
+	    ent.put()
+    	

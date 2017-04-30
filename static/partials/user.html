@@ -1,0 +1,42 @@
+<div ng-controller="R2Ctrl" init="showUser()">
+
+
+<!--button ng-click="showUser()" class="btn btn-primary"> Показать данные </button-->
+
+<!--button ng-click="editUser(); saved_alert()" class="btn btn-primary"> Сохранить изменения </button-->
+<!--a href="#/create_group" ng-hide="()" class="btn btn-primary pull-right"> Пригласить в свою группу </a>
+<select id="old_url" ng-model="conference.old_url" name="old_url" ng-options="template.group_url[idx] as choice for (idx, choice) in template.group_name"
+                            class="form-control-sm" ng-required="true">
+                    </select>
+
+<!--div class="col-lg-5 col-lg-offset-2 col-sm-6">
+    <div class="spinner">
+	<img class="img-responsive" src="{{im}}">
+    </div>
+</div-->
+
+<div ng-repeat="st_block in q.stat_block track by $index" ng-init="Index = $index">
+   <!--{{ st_block }}-->
+   <a href="#/group/{{ st_block.group_url }}">Группа {{ st_block.group_name }}</a>	{{ st_block.group_rate }}
+  <table class="table table-stripped table-hover">
+    <!--tr>
+      <th> Данные </th>
+      <th> Значение </th>	
+    </tr-->
+     	
+    <tr ng-repeat="st_name in st_block.st_name track by $index">	
+        <td> {{ st_name }}  </td>
+    <td ng-if = "st_block.st_opt[$index]=='photo'" >
+       <button ng-click="show(st_block.st_def[$index], st_block.obj_url)">show</button> </a> 
+ <!--ng-change="line_change($index)"  ng-model= q.st_def[$index]--> </td>	
+    <td ng-if = "st_block.st_ch[$index] && st_block.st_opt[$index]!='photo'"> <span> <input type="text" ng-change="line_change(Index, $index)"  ng-model= st_block.st_def[$index]> </td>
+    <td ng-if = "!st_block.st_ch[$index] && st_block.st_opt[$index]!='photo'">{{ st_block.st_def[$index] }} </td>	
+  </tr>
+ </table>
+</div>
+
+
+</div>
+
+
+

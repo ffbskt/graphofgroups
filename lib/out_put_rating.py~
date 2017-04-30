@@ -1,0 +1,131 @@
+# -*- coding: utf-8 -*-
+import endpoints
+from google.appengine.api import users
+from protorpc import messages
+from protorpc import message_types
+from protorpc import remote
+from google.appengine.ext import ndb
+from google.appengine.api import mail
+import json
+from models import *
+#from extra_library import *
+#from google.appengine.ext.ndb import msgprop
+#from add_funk import make_dict_from_stat
+import time
+import logging
+import sys
+from google.appengine.api import memcache
+import re
+from random import randint
+from datetime import datetime
+
+
+		
+
+def out_put_rating(self):
+    table = ObjectRating.query()
+    #fix what do with General Parametrs&???!! down bug
+    groups = Group.query()
+    #max_five = []
+    objs = []
+    ind = {}			
+    for group in groups:
+	exist_table = []
+	for obj in table: # Add split for Group and Base objts
+	    if group.key.urlsafe() in obj.to_dict():
+		exist_table.append(obj)
+	#print '+++', exist_table
+	top = sorted(exist_table, key=lambda x: getattr(x, group.key.urlsafe())[-1], reverse=True)
+	if len(top) >= 3:
+	    top = top[:3] 
+	#print '--', top
+	group.top_rate=[]
+	place = 1
+	for obj in top:
+	    rate = getattr(obj, group.key.urlsafe())[-1]	
+	    group.top_rate.append([obj.key.id(), obj.name, obj.avatar,
+			   obj.is_group, str(rate)])
+	    entity = ndb.Key(urlsafe=obj.key.id()).get()
+	    hist = (str(place) + ' place ' + obj.name + ' in group ' + group.name + ' with group rate ' + 
+		  str(group.rate[-1]) + ' and own result ' + str(getattr(obj, group.key.urlsafe())[-1]) + 
+			' it was at ' + datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")) 
+	    place += 1
+	    entity.frame.append(hist)
+	    entity.put()	
+	    #fill_max_five(max_five, obj.key.id(), rate, other=[obj.name, obj.avatar,
+			   #obj.is_group])
+	    objs.append([obj.key.id(), obj.name, obj.avatar,
+			   obj.is_group, str(rate)])				 	
+	group.put()
+	#print group
+    gen_p = ndb.Key(Group, 'ffbskt@gmail.com', Group, 'General parametrs').get()
+    for o in sorted(objs, key=lambda x: x[4], reverse=True):
+	if o[0] not in ind and len(ind) < 5: 
+  	    ind[o[0]] = [o[0], o[1], o[2], o[3], o[4]]	
+    #for i in max_five:
+	#i[4] = str(i[4]) 	
+    gen_p.top_rate = sorted(ind.values(), key=lambda x: x[4], reverse=True)
+    #max_five = sorted(max_five, key=lambda x: , reverse=True)	
+    gen_p.put()				
+    #print '$$$$$$$$$$', gen_p	
+    return Answer()
+
+
+#s = StringProperty()
+#s._name = 'variants.dynamic')
+#Item.query(s == 'a').fetch()
+"""
+def find_double_ind(ll, val):
+    for i, b in enumerate(ll):
+	if b[0] == val:
+	    return i
+def fill_max_five(max_five, obj_id, rate, ids={}, other=[0,0,0]):		
+    if len(max_five) < 5 and (obj_id not in ids): 
+	max_five.append([obj_id, other[0], other[1], other[2], rate])
+	ids[obj_id] = rate
+    	#max_five = sorted(max_five, key=lambda x: x[4], reverse=True)
+	print 1, obj_id
+    elif len(max_five) < 5 and ids[obj_id] < rate:
+	ind = find_double_ind(max_five, obj_id)
+	max_five[ind] = [obj_id, other[0], other[1], other[2], rate]
+	#max_five = sorted(max_five, key=lambda x: x[4], reverse=True)
+	print 2, obj_id
+    elif len(max_five) < 5:
+	pass
+	print 0, obj_id		
+    elif max_five[4][4] < rate and obj_id not in ids: 
+	max_five[4] = [obj_id, other[0], other[1], other[2], rate]
+	#max_five = sorted(max_five, key=lambda x: x[4], reverse=True)
+	print 3, obj_id, rate, max_five[4]
+    elif max_five[4][4] < rate and ids[obj_id] < rate:
+	ind = find_double_ind(max_five, obj_id)
+	max_five[ind] = [obj_id, other[0], other[1], other[2], rate]
+	print 4, obj_id
+    else:	
+        print '+++', obj_id, rate 	
+    max_five = sorted(max_five, key=lambda x: x[4], reverse=True)
+    print '))', max_five	
+
+def best_five_in_obj(max_five, obj_id, rate, ids={}, other=[0,0,0], objs=[]):
+    objs.append([obj_id, other[0], other[1], other[2], rate])	
+
+def test_fill_max_five():
+    objs = []	
+    max_five = []
+    ind = {}		
+    for i in 'arqa':
+	objs.append([i, i,0,0, randint(10, 100)])
+    for o in sorted(objs, key=lambda x: x[4], reverse=True):
+	if o[0] not in ind and len(ind) < 5: 
+  	    ind[o[0]] = [o[0], o[1], o[2], o[3], o[4]] 
+    print '---', sorted(objs, key=lambda x: x[4], reverse=True)
+    for o in objs:
+	fill_max_five(max_five, o[0], o[4], other=[o[1],0,0])
+    print '-d-', ind.values()
+    print '-m-',max_five				
+
+if __name__ == "__main__":
+    test_fill_max_five()
+
+"""
+

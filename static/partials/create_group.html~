@@ -1,0 +1,55 @@
+   
+
+<div ng-controller="CreateGroupCtrl" ng-init="loadTemplate()">
+       
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="messages" class="alert alert-{{alertStatus}}" ng-show="messages">
+                <span ng-bind="messages"></span>
+                <i class="dismiss-messages pull-right glyphicon glyphicon-remove" ng-click="messages = ''"
+                   ng-show="messages"></i>
+            </div>
+            <img class="spinner" src="/img/ajax-loader.gif" ng-show="loading"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Создать группу </h3> <!--в группе {{ parent2.group }}-->
+
+            <form name="conferenceForm" novalidate role="form">
+                <div class="form-group">
+                    <label for="new_name">Name <span class="required">*</span></label>
+                    <span class="label label-danger"
+                        ng-show="conferenceForm.new_name.$error.required">Required!</span>
+                    <input id="new_name" type="text" name="new_name" ng-model="conference.new_name" class="form-control"
+                           />
+                </div>
+
+
+                <div class="form-group">
+                    <label for="content">Description</label>
+                    <textarea id="content" type="text" name="content" ng-model="conference.content"
+                              class="form-control"></textarea>
+                </div>
+	
+		<div class="form-group">
+                    <label for="old_url">Templates <span class="required">*</span></label>
+		    <span class="label label-danger"
+                        ng-show="conferenceForm.old_url.$error.required">Required!</span>	
+                    <select id="old_url" ng-model="conference.old_url" name="old_url" ng-options="template.group_url[idx] as choice for (idx, choice) in template.group_name"
+                            class="form-control" ng-required="true">
+                    </select>
+                </div>
+
+                <button ng-click="create(conferenceForm)" class="btn btn-primary"
+                        ng-disabled="!isValidConference(conferenceForm) || loading">Create
+                </button>
+            </form>
+        </div>
+    </div>
+	{{ template }}
+	{{ conference }}
+</div>
+
+ga=GroupStat(name='A', st_name=['name', 'like user', 'lesson_in', '100m', 'jump'], st_opt=['0','like','nero',"ranking","like"], st_ifbase=[True, True, False,False,False], st_place=[0], role_propertys_add=[{'name':'admin' , 'change':['name', 'lesson_in', '100m', 'jump', '@invite'], 'visible': []}, {'name':'user' , 'change':['lesson_in','jump'] , 'visible': []}])
+create_group()

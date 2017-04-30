@@ -1,0 +1,90 @@
+
+<div ng-controller="RootCtrl">
+
+ <!--a class="btn btn-default btn-lg" ng-click="signIn()">Google+ SignIn</a>
+{{ rootMessages }} <p></p-->
+<div class="intro-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="intro-message">
+                <h1>Добро пожаловать в список групп!</h1>
+		
+                <hr class="intro-divider">
+                <ul class="list-inline intro-social-buttons">
+                    <li id="signInLink" ng-hide="getSignedInState()" on-click="return false">
+                        <a class="btn btn-default btn-lg" ng-click="signIn()">Регистрация через Google+</a>
+                    </li>
+                    <!--li id="signOutLink" ng-show="getSignedInState()" on-click="return false">
+                        <a class="btn btn-default btn-lg" ng-click="signOut()">Выход</a>
+                    </li-->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!--h3 title="Этот текст будет показан при наведении">Ваши данные </h3-->
+</div>
+<!--div ng-controller="R2Ctrl">
+  <input type="file" id="file" name="file"/>
+  <br>
+  <button ng-click="add()">Add</button>
+  <img src="{{data}}"/>
+ <IMG
+  ng-src="{{data}}">
+</IMG>
+  <p>{{data}}</p>
+</div-->
+
+<div ng-controller="R2Ctrl" init="showUser()">
+<h3> {{ q.stat_block[0].st_def[2] }} </h3>
+{{ q.stat_block[0].st_def[0] }}
+<!--{{ history_backet }} === {{ history }}-->
+
+<p>
+<p ng-repeat="user in q.top_rate track by $index">
+    <a ng-if="!user.kind" ng-href="#/user/{{ user.url }}"> {{user.name}} {{user.rating}} </a>
+    <a ng-if="user.kind" ng-href="#/group/{{ user.url }}"> {{user.name}} {{user.rating}} </a>	
+</p>
+</p>
+<button ng-click="showUser()" class="btn btn-primary"> Показать данные </button>
+<button ng-click="editUser(); saved_alert()" class="btn btn-primary"> Сохранить изменения </button>
+<!--a href="#/create_group" ng-hide="()" class="btn btn-primary pull-right"> Создать свою группу </a-->
+ 
+
+<!--div class="col-lg-5 col-lg-offset-2 col-sm-6">
+    <div class="spinner">
+	<img class="img-responsive" src="{{im}}">
+    </div>
+</div-->
+
+<div ng-repeat="st_block in q.stat_block track by $index" ng-init="Index = $index">
+   <!--{{ st_block }} -->
+   <a href="#/group/{{ st_block.group_url }}">Группа {{ st_block.group_name }}</a>	{{ st_block.group_rate }}
+  <table class="table table-stripped table-hover">
+    <!--tr>
+      <th> Данные </th>
+      <th> Значение </th>	
+    </tr-->
+     	
+    <tr ng-repeat="st_name in st_block.st_name track by $index">	
+        <td> {{ st_name }}  </td>
+    <td ng-if = "st_block.st_ch[$index] && st_block.st_opt[$index]=='photo'"> <span> 
+<input type="file" id="file" name="file"/> 
+  <br>
+  <button ng-click="add(Index, $index); line_change(Index, $index)">Add</button>
+
+ <!--ng-change="line_change($index)"  ng-model= q.st_def[$index]--> </td>	
+    <td ng-if = "st_block.st_ch[$index] && st_block.st_opt[$index]!='photo'"> <span> <input type="text" ng-change="line_change(Index, $index)"  ng-model= st_block.st_def[$index]> </td>
+    <td ng-if = "!st_block.st_ch[$index]">{{ st_block.st_def[$index] }} </td>	
+  </tr>
+ </table>
+</div>
+<div class="col-lg-12">
+<h1> История достижений </h1>
+ <p> {{q.frame}} </p>
+</div>
+</div>
+
+
+

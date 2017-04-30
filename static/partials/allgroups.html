@@ -1,0 +1,59 @@
+<!--div ng-controller="RootCtrl">
+
+	<ul class="list-inline intro-social-buttons">
+                    <li id="signInLink" ng-hide="getSignedInState()" on-click="return false">
+                        <a class="btn btn-default btn-lg" ng-click="signIn()">Google+ SignIn</a>
+                    </li>
+                    <li id="signOutLink" ng-show="getSignedInState()" on-click="return false">
+                        <a class="btn btn-default btn-lg" ng-click="signOut()">Log out</a>
+                    </li>
+                </ul>
+
+</div-->
+
+
+<div ng-controller="AllGroupCtrl" init="allGroups()">
+    <div>
+    <button ng-click="allGroups()">Показать все группы</button> 
+    <button ng-click="chose_group=!chose_group">Добавить свою группу</button>
+    <div ng-if="chose_group">
+	<select ng-model="add_group.select" ng-options="choice for choice in all_groups.groups_created_name"
+                            class="form-control">
+                    </select>	
+<!--{{all_groups.groups_created_name}} k {{add_group.select}} -->
+    </div>	
+<!--{{all_groups}} -->
+	<table id="conference-table" class="table table-striped table-hover">
+		<th>№</th>
+		<th>Группа</th>
+		<th>Создатель</th>
+		<th>Рейтинг</th> 
+		<th>Количество человек</th>
+		<th></th>
+    		
+		<tr ng-repeat="x in all_groups.groups_name" >
+		    <td> {{ $index + 1 }} </td> 
+        	    <td> 
+			<a href="#/group/{{ all_groups.url[$index] }}"> {{ x }}</a>
+		
+		    </td> 
+		    <td> 
+			<a href="#/user/{{ all_groups.url_author[$index] }}"> {{ all_groups.group_author[$index]}}</a>
+		    </td> 	      	    	
+		    <!--td ng-init="y = all_groups.content[$index]"> 
+			    <a ng-if = "y.search('#') != -1"> 
+				    <a ng-href="{{y.substring(y.search('#')+1)}}"> {{y.substring(0, y.search('#'))}} </a> 
+		            </a>
+		 	    <a ng-if = "y.search('#') == -1"> {{y}} </a>
+		    </td-->
+		<a> {{chose_group}} {{add_group.select}} </a>	
+		    <td>{{all_groups.rate_group[$index]}}</td>
+		    <td>{{all_groups.people[$index]}}</td>
+		    <td ng-if="chose_group && add_group.select != null"><button ng-click="askJoin(all_groups.url[$index], add_group.select, '1')">Добавить выбранную группу</button> </td>		
+		    <td ng-if="(!all_groups.tryed[$index]) && (all_groups.invited_n[$index]==' ')"><button ng-click="askJoin(all_groups.url[$index], x)">Запрос на вступление</button> </td>	
+		    <td ng-if="all_groups.invited_n[$index]!=' '"><button ng-click="agreeJoin(all_groups.invited_n[$index], x, all_groups.invited_r[$index])">Принять приглашение</button> </td>
+		    
+		</tr>
+	</table>        
+    </div>
+</div>

@@ -1,0 +1,67 @@
+<div ng-controller="EditGroupCtrl" ng-init="init()"> 
+
+<select ng-model="g" ng-click="saveChange()">
+    <option ng-repeat="i in gr.groups_name" value="{{ i }}" ng-model="g"> {{i}} </option>
+</select>
+
+<button ng-click="showGroup()"> Показать пользователей в групе </button>
+<button ng-click="saveChange()"> Сохранить изменения </button>
+
+<p><b>Список пользователей, приславших запрос на вступление</b></p>
+{{ a.ask_join }} {{a.joined}}
+<p>
+<label ng-repeat="i in a.ask_join track by $index">
+  <input
+    type="checkbox"
+    name="selectedFruits[]"
+    value="{{i}}"
+    ng-checked="selection.indexOf(i) > -1"
+    ng-click="toggleSelection($index)"
+  > {{i}}
+
+</label>
+  </p>
+<button ng-click="addMessage()"> Отправить </button>
+<input type="text" ng-model=mess>
+<textarea rows="4" cols="50" readonly>
+
+    {{ a.chat }}
+
+</textarea>
+</body>
+
+<h3>Пользователи в группе</h3>
+<table id="conference-table" class="table table-striped table-hover">
+  
+  <tr>
+    <th> N </th>
+    <th ng-repeat="name in a.user_group_stat[0].st_name"> {{ name }} </th>	
+  </tr>
+  <!--tr ng-repeat="x in vis">
+    {{ x }}
+    <!--td>{{ $index + 1 }}</td-->
+  <tr ng-repeat="user_stat in a.user_group_stat track by $index" ng-init="Index = $index">
+    <!--a ng-model="ind" {{ind=0}}-->
+    <td> {{Index + 1}} </td>	 	
+    <td ng-repeat="def in user_stat.st_def track by $index">   
+    <!--a ng-if="user_stat.st_l[$index]=='link'" ng-href="/{{user_stat.st_ld[$index]}}">{{user_stat.st_d[$index]}}</a-->  
+    <a ng-if = "!user_stat.st_ch[$index]"> <a ng-if = "def.search('#') != -1" ng-href="{{def.substring(def.search('#')+1)}}"> {{def.substring(0, def.search('#'))}} </a> 
+<a ng-if = "def.search('#') == -1 && !user_stat.st_ch[$index]"> {{ def }} </a> 
+<a ng-if = "user_stat.st_opt[$index] == 'photo'"> <button ng-click="show($index, user_stat.st_def[$index], user_stat.mail)">show</button> 
+</a>
+    <a ng-if = "user_stat.st_ch[$index]"><input type="text" ng-change="changed(def, Index, $index, user_stat.mail, 0)" ng-model=def id="user_stat.mail">
+     <button ng-click="def = changed(def, Index, $index, user_stat.mail, 1)">
+  +
+</button>	
+     <!--button ng-click="def=parseInt(def)-1" ng-change="changed(def, Index, $index, user_stat.mail)">
+  -
+</button-->
+
+    </a></td>	
+  </tr>
+  <!--tr ng-repeat="x in stat track by $index">
+	<td><span><input type="text" ng-model="x"> </span></td>	
+  </tr-->
+</table>
+
+</div>

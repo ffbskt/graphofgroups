@@ -1,0 +1,176 @@
+<div ng-controller="EditGroupCtrl" ng-init="showGroup()"> 
+
+<h2> Группа {{ a.name }} </h2>
+
+<button ng-click="showGroup(); saveChange()" class="btn btn-primary"> Показать пользователей в групе </button>
+<button ng-click="saveChange()" class="btn btn-primary"> Сохранить изменения </button>
+<a ng-if="a.creator">
+    <button ng-click="editCh(show_role)" class="btn btn-primary"> 
+	<span ng-if="!show_role"> Редактировать роли </span> 
+	<spann ng-if="show_role"> Скрыть роли </span>	
+    </button>
+    {{ show_role }}	
+</a>
+
+<!--a ng-if="a.user_group_stat == null">
+    <button ng-click="group_askJoin()">Запрос на вступление</button>
+</a-->
+<!--button ng-click="saveChange()" class="btn btn-primary"> Удалить роль </button>
+
+<!--a href="#/create_group?group={{ g }}" class="btn btn-primary"> ?Добавить/удалить статистику </a>
+<a href="#/create_group?group={{ g }}" class="btn btn-primary"> ?Добавить созданную группу </a-->
+
+<div ng-if = "a.ask_join.length > 0">
+<p><b>Список пользователей, приславших запрос на вступление</b></p>
+{{ a.ask_join }} {{a.joined}} {{ a.ask_join.length }}
+<table id="conference-table" >
+<tr>
+    <th> имя       </th>
+    <th> рейтинг </th>
+    <th> дата      </th>
+    <th> роль	</th>
+    		
+</tr>
+    <tr ng-repeat="data in a.ask_join track by $index">	
+    <td> <a ng-href="#/{{data.kind}}/{{ data.url }}"> {{ data.name }} </a></td>	
+    <td> {{ data.rate }}</td>
+    <td> {{ data.time }}</td>
+    <td><select id="role" ng-model="role" name="role" ng-options="choice for choice in a.roles"
+                            class="form-control">
+                    </select></td>
+    <td><button ng-click="joinAccept(data.url, role)"> Добавить в группу </button>
+  </td>					
+</tr>
+
+
+</table>
+</div>
+<div>
+
+ <!-- sr {{ show_role }} -->
+<button ng-click="addMessage()"> Отправить </button>
+<input type="text" ng-model=mess class="form-control">
+<textarea rows="4" cols="50" readonly>
+
+    {{ a.chat }}
+
+</textarea>
+</div>
+<p ng-repeat="user in a.top_rate track by $index">
+    <a ng-if="!user.kind" ng-href="#/user/{{ user.url }}"> {{user.name}} {{user.rating}} </a>
+    <a ng-if="user.kind" ng-href="#/group/{{ user.url }}"> {{user.name}} {{user.rating}} </a>	
+</p>
+<!-- ----------------NFC Area ----------------------------------------style="color: #C0C0C0;"--->
+<div>
+
+<!--div ng-if="a.add_id"-->
+<form ng-submit="addNFC()">
+    <input ng-if="a.add_id" type="text" ng-model=$parent.user_mail>	
+    <input type="password" ng-model=nfc >
+    <input type="submit" value="nfc">
+{{nfc_resp.ans}}
+</form>
+<!--/div>
+<div ng-if="!a.add_id">
+<form ng-submit="addNFC()">
+    <input type="password" ng-model=nfc >
+    <input type="submit" value="nfc">
+{{nfc_resp.ans}}
+</form>
+</div-->
+
+<!--textarea rows="4" cols="50" readonly>
+
+    {{ a.chat }}
+
+</textarea-->
+</div>
+ 
+
+
+<!-- all users {{ a }} -->
+<h3>Пользователи в группе</h3>
+<table id="conference-table" class="table table-striped table-hover">
+  
+  <tr>
+    <th> N </th>
+    <th ng-repeat="st_nameg in a.user_group_stat[0].stat_block[0].st_name"> {{ st_nameg }} </th>
+    <th ng-repeat="st_nameb in a.user_group_stat[0].stat_block[1].st_name"> {{ st_nameb }} </th>	
+  </tr>
+  <!--tr ng-repeat="x in vis">
+    {{ x }}
+    <!--td>{{ $index + 1 }}</td-->
+  <tr ng-repeat="user_stat in a.user_group_stat track by $index" ng-init="Index = $index">
+    <!--a ng-model="ind" {{ind=0}}-->
+    	
+    <td> {{Index + 1}} </td>
+    <a ng-if = "show_role">	
+    <td ng-if = "show_role" ng-init="upd_role"> {{ user_stat.role }} 
+<select id="upd_role" ng-model="upd_role" name="upd_role" ng-options="choice for choice in a.roles">
+	</select>
+	<button ng-click="editRole(user_stat.url, upd_role, add=true)" > добавить </button>
+	<button ng-click="editRole(user_stat.url, upd_role, add=false)" > удалить </button>
+
+	
+    </td>		
+	</a> 	
+    <td ng-repeat="def in user_stat.stat_block[0].st_def track by $index" 
+	ng-init="blk = 0">	   
+    <!--a ng-if="user_stat.st_l[$index]=='link'" ng-href="/{{user_stat.st_ld[$index]}}">{{user_stat.st_d[$index]}}</a-->  
+        <a ng-if = "!user_stat.stat_block[blk].st_ch[$index]" > 
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'name' && user_stat.stat_block[blk].obj_kind =='Base'" ng-href="#/user/{{ user_stat.stat_block[blk].obj_url }}"> {{def}} </a> 
+	 <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'name' && user_stat.stat_block[blk].obj_kind =='Group'" ng-href="#/group/{{ user_stat.stat_block[blk].obj_url }}"> {{def}} </a>
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'link' && def.search('#') != -1" ng-href="{{def.substring(def.search('#')+1)}}"> {{def.substring(0, def.search('#'))}} </a> 
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'link' && def.search('#') == -1" ng-href="{{ def }}"> {{ def }} </a> 
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'photo'"> 
+		<button ng-click="show(user_stat.stat_block[blk].st_def[$index], user_stat.stat_block[blk].obj_url)">show</button> </a>
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'points'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	    <a ng-if = " user_stat.stat_block[blk].st_opt[$index] == 'nero' || user_stat.stat_block[blk].st_opt[$index] == 'w' || user_stat.stat_block[blk].st_opt[$index] == 'itr'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == '0' || user_stat.stat_block[blk].st_opt[$index] == 'hist'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'ranking'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	    
+	</a>
+    	<a ng-if = "user_stat.stat_block[blk].st_ch[$index]">
+		
+	    <input type="text" ng-change="changed(def, Index, $index, blk, user_stat.key_value, 0)" ng-model=def id="user_stat.key_value">
+     	    <button ng-click="def = changed(def, Index, $index, blk, user_stat.key_value, 1)"> + </button>	
+     <!--button ng-click="def=parseInt(def)-1" ng-change="changed(def, Index, $index, user_stat.mail)">
+  -
+</button-->
+
+    	</a>
+    </td>
+    <td ng-repeat="def in user_stat.stat_block[1].st_def track by $index" 
+	ng-init="blk = 1" >		   
+    <!--a ng-if="user_stat.st_l[$index]=='link'" ng-href="/{{user_stat.st_ld[$index]}}">{{user_stat.st_d[$index]}}</a-->  
+        <a ng-if = "!user_stat.stat_block[blk].st_ch[$index]" > 
+	
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'link' && def.search('#') != -1" ng-href="{{def.substring(def.search('#')+1)}}"> {{def.substring(0, def.search('#'))}} </a> 
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'link' && def.search('#') == -1" ng-href="{{ def }}"> {{ def }} </a> 
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'photo'"> 
+		<button ng-click="show(user_stat.stat_block[blk].st_def[$index], user_stat.key_value)">show</button> </a>
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'points'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	    <a ng-if = " user_stat.stat_block[blk].st_opt[$index] == 'nero' || user_stat.stat_block[blk].st_opt[$index] == 'w' || user_stat.stat_block[blk].st_opt[$index] == 'itr'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	    <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == '0' || user_stat.stat_block[blk].st_opt[$index] == 'hist'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+            <a ng-if = "user_stat.stat_block[blk].st_opt[$index] == 'ranking'"> {{ user_stat.stat_block[blk].st_def[$index] }} </a>
+	</a>
+    	<a ng-if = "user_stat.stat_block[blk].st_ch[$index]">
+		
+	    <input type="text" ng-change="changed(def, Index, $index, blk, user_stat.key_value, 0)" ng-model=def id="user_stat.key_value">
+     	    <button ng-click="def = changed(def, Index, $index, blk, user_stat.key_value, 1)"> + </button>	
+     <!--button ng-click="def=parseInt(def)-1" ng-change="changed(def, Index, $index, user_stat.mail)">
+  -
+</button-->
+
+    	</a>
+    </td>	
+  </tr>
+  <!--tr ng-repeat="x in stat track by $index">
+	<td><span><input type="text" ng-model="x"> </span></td>	
+  </tr-->
+</table>
+<p ng-repeat="f in a.frame">
+    <a> df {{f}} </a>
+</p>
+
+</div>
